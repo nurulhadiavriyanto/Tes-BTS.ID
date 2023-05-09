@@ -16,7 +16,7 @@ class ChecklistItemController extends Controller
             return response()->json("Checklist not found.", 400);
         }
 
-        $data = ChecklistItem::select('checklist_item.id','checklist.name as checklist_name','checklist_item.name as item_name')
+        $data = ChecklistItem::select('checklist_item.id','checklist.name as checklist_name','checklist_item.name as item_name','checklist_item.status')
             ->join('checklist', 'checklist_item.id_checklist', '=', 'checklist.id')
             ->where('checklist.id','=',$id)
             ->get();
@@ -42,6 +42,7 @@ class ChecklistItemController extends Controller
         $checklist_item = ChecklistItem::create([
             'id_checklist' => $id,
             'name' => $request->get('itemName'),
+            'status' => 'On Process'
         ]);
 
         return response()->json($checklist_item, 200);
@@ -58,13 +59,31 @@ class ChecklistItemController extends Controller
             return response()->json("Checklist Item not found.", 400);
         }
 
-        $data = ChecklistItem::select('checklist_item.id','checklist.name as checklist_name','checklist_item.name as item_name')
+        $data = ChecklistItem::select('checklist_item.id','checklist.name as checklist_name','checklist_item.name as item_name','checklist_item.status')
             ->join('checklist', 'checklist_item.id_checklist', '=', 'checklist.id')
             ->where('checklist.id', '=', $checklist_id)
             ->where('checklist_item.id', '=', $item_id)
             ->get();
 
         return response()->json($data, 200);
+    }
+
+    public function updateStatusChecklistItem($checklist_id, $item_id)
+    {
+        $checklist = Checklist::find($checklist_id);
+        if(!isset($checklist)){
+            return response()->json("Checklist not found.", 400);
+        }
+
+        $checklist_item = ChecklistItem::find($item_id);
+        if(!isset($checklist_item)){
+            return response()->json("Checklist Item not found.", 400);
+        }
+
+        $checklist_item->status = 'Finish';
+        $checklist_item->save();
+
+        return response()->json($checklist_item, 200);
     }
 
     public function deleteChecklistItem($checklist_id, $item_id)

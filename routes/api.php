@@ -30,5 +30,6 @@ Route::delete('checklist/{id}', [ChecklistController::class, 'deleteChecklist'])
 Route::get('checklist/{id}/item', [ChecklistItemController::class, 'getChecklistItem'])->middleware('jwt.verify');
 Route::post('checklist/{id}/item', [ChecklistItemController::class, 'createChecklistItem'])->middleware('jwt.verify');
 Route::get('checklist/{checklist_id}/item/{item_id}', [ChecklistItemController::class, 'getChecklistItemByChecklist'])->middleware('jwt.verify');
+Route::put('checklist/{checklist_id}/item/{item_id}', [ChecklistItemController::class, 'updateStatusChecklistItem'])->middleware('jwt.verify');
 Route::delete('checklist/{checklist_id}/item/{item_id}', [ChecklistItemController::class, 'deleteChecklistItem'])->middleware('jwt.verify');
 Route::put('checklist/{checklist_id}/item/rename/{item_id}', [ChecklistItemController::class, 'updateChecklistItem'])->middleware('jwt.verify');
